@@ -1,53 +1,94 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>Chiamata da Ghostface</title>
-<style>
-body{
-background:black;
-color:white;
-font-family:Arial;
-text-align:center;
-padding:40px;
-}
-button{
-padding:15px;
-margin:10px;
-font-size:18px;
-cursor:pointer;
-}
-</style>
-</head>
+    const suspectsEl = document.getElementById("suspects");
+    const resultBox = document.getElementById("resultBox");
 
-<body>
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      counter.textContent = `Domanda ${currentQuestion + 1} / ${questions.length}`;
+      promptEl.textContent = q.prompt;
+      introEl.textContent = q.intro;
+      feedbackEl.className = "feedback hidden";
+      feedbackEl.textContent = "";
+      answersEl.innerHTML = "";
 
-<h1>📞 Chiamata in arrivo...</h1>
+      q.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.className = "answer";
+        btn.textContent = option.label;
+        btn.onclick = () => chooseAnswer(option.correct, q.success, q.fail);
+        answersEl.appendChild(btn);
+      });
+    }
 
-<img src="https://upload.wikimedia.org/wikipedia/en/7/7f/Ghostface.png" width="200">
+    function chooseAnswer(isCorrect, successText, failText) {
+      feedbackEl.classList.remove("hidden", "ok", "no");
+      if (isCorrect) {
+        feedbackEl.classList.add("ok");
+        feedbackEl.textContent = successText;
+        setTimeout(() => {
+          currentQuestion++;
+          if (currentQuestion < questions.length) {
+            showQuestion();
+          } else {
+            showFinal();
+          }
+        }, 900);
+      } else {
+        feedbackEl.classList.add("no");
+        feedbackEl.textContent = failText;
+      }
+    }
 
-<p>Ciao Claudio... ti piacciono i giochi?</p>
+    function showFinal() {
+      quizSection.classList.add("hidden");
+      finalSection.classList.remove("hidden");
+      suspectsEl.innerHTML = "";
 
-<h2>Come ti chiami?</h2>
+      suspects.forEach(suspect => {
+        const card = document.createElement("div");
+        card.className = "suspect-card";
 
-<button onclick="next()">Claudio</button>
-<button onclick="wrong()">Ghostface</button>
-<button onclick="wrong()">Non rispondo</button>
+        const btn = document.createElement("button");
+        btn.className = "suspect";
+        btn.style.padding = "0";
+        btn.style.border = "0";
+        btn.style.background = "transparent";
 
-<p id="result"></p>
+        btn.innerHTML = `
+          <img src="${suspect.photo}" alt="${suspect.name}">
+          <div class="body">
+            <h3>${suspect.name}</h3>
+            <p>${suspect.hint}</p>
+          </div>
+        `;
 
-<script>
+        btn.onclick = () => pickSuspect(suspect.id);
+        card.appendChild(btn);
+        suspectsEl.appendChild(card);
+      });
+    }
 
-function next(){
-document.getElementById("result").innerHTML =
-"Interessante... passiamo alla prossima domanda.";
-}
+    function pickSuspect(id) {
+      resultBox.classList.remove("hidden", "success", "error");
+      if (id === culpritId) {
+        resultBox.classList.add("success");
+        resultBox.innerHTML = `
+          <div class="tag">Ghostface smascherato</div>
+          <h2>Hai trovato il colpevole.</h2>
+          <p class="intro-text">Complimenti Claudio. Hai superato la chiamata e riconosciuto chi si nascondeva dietro la maschera. Ora puoi reclamare torta, applausi e diritto di accusare chiunque per il resto della serata.</p>
+        `;
+      } else {
+        resultBox.classList.add("error");
+        resultBox.innerHTML = `
+          <div class="tag">Sospettato sbagliato</div>
+          <h2>No. Troppo facile.</h2>
+          <p class="intro-text">Hai scelto la persona sbagliata. Riguarda gli indizi e riprova: il vero Ghostface è ancora tra voi.</p>
+        `;
+      }
+    }
 
-function wrong(){
-document.getElementById("result").innerHTML =
-"Risposta sbagliata... riprova.";
-}
-
-</script>
-
+    showQuestion();
+  </script>
 </body>
 </html>
+

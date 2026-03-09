@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chiamata da Ghostface</title>
+<style>
+body{
+background:black;
+color:white;
+font-family:Arial;
+text-align:center;
+padding:40px;
+}
+button{
+padding:15px;
+margin:10px;
+font-size:18px;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📞 Chiamata in arrivo...</h1>
+
+<img src="https://upload.wikimedia.org/wikipedia/en/7/7f/Ghostface.png" width="200">
+
+<p>Ciao Claudio... ti piacciono i giochi?</p>
+
+<h2>Come ti chiami?</h2>
+
+<button onclick="next()">Claudio</button>
+<button onclick="wrong()">Ghostface</button>
+<button onclick="wrong()">Non rispondo</button>
+
+<p id="result"></p>
+
+<script>
+
+function next(){
+document.getElementById("result").innerHTML =
+"Interessante... passiamo alla prossima domanda.";
+}
+
+function wrong(){
+document.getElementById("result").innerHTML =
+"Risposta sbagliata... riprova.";
+}
+
+</script>
+
+</body>
+</html>
